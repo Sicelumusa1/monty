@@ -65,4 +65,7 @@ typedef struct global_vars
 
 extern global_t read_op;
 
+void exe_bytecode(char **bytecode, int num_instructions);
+instruction_t *get_opcodes(void);
+
 #endif

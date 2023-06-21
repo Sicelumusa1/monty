@@ -19,8 +19,9 @@ int main(argc, argv[])
 	/*Read and process the file line by line*/
 	while((read_op.read = getline(&read_op.line, &read_op.line_size, read_op.file)) != -1)
 	{
-		/*functions to call to read line by line and execute*/
-		line_number++;
+		/* call exe_bytecode and pass the line as the parameter */
+		exe_bytecode(&read_op.line, num_instructions);
+		read_op.line_number++;
 	}
 
 	/*Check if there was an error while reading the file*/
