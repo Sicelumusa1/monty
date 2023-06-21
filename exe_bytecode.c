@@ -7,7 +7,7 @@
  */
 
 void exe_bytecode(char **bytecode, int num_instructions)
-{	
+{
 
 	char *opcode;
 	char *trimmed_opcode;
@@ -55,7 +55,8 @@ void exe_bytecode(char **bytecode, int num_instructions)
 		if (!found)
 		{
 			/* if no match is found print error */
-			fprintf(stderr, "Error: Unknown instruction %s at line %u\n", trimmed_opcode, read_op.line_number);
+			fprintf(stderr, "Error: Unknown instruction %s at line %u\n",
+					trimmed_opcode, read_op.line_number);
 			exit(EXIT_FAILURE);
 		}
 
