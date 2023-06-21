@@ -7,11 +7,12 @@
  */
 
 void exe_bytecode(char **bytecode, int num_instructions)
-{
+{	
+
 	char *opcode;
 	char *trimmed_opcode;
 	int found = 0;
-	int i;
+	int i, j;
 
 	stack_t *stack = malloc(sizeof(stack_t));
 
@@ -23,9 +24,9 @@ void exe_bytecode(char **bytecode, int num_instructions)
 
 	for (i = 0; i < num_instructions; i++)
 	{
-		line = bytecode[i];
+		read_op.line = bytecode[i];
 
-		opcode = strtok(line, " \t");
+		opcode = strtok(read_op.line, " \t");
 		if (opcode == NULL)
 		{
 			/* ignore empty lines */
@@ -40,12 +41,12 @@ void exe_bytecode(char **bytecode, int num_instructions)
 		}
 
 		/* search for the opcode in the instructions array */
-		for (i = 0; instructions[i].opcode != NULL; i++)
+		for (j = 0; read_op.instruction[j].opcode != NULL; j++)
 		{
-			if (strcmp(trimmed_opcode, instructions[i].opcode) == 0)
+			if (strcmp(trimmed_opcode, read_op.instruction[i].opcode) == 0)
 			{
 			/* call the corresponding opcode handler */
-				instructions[i].f(&stack_t, line_number);
+			read_op.instruction[j].f(&stack, read_op.line_number);
 				found = 1;
 				break;
 			}
@@ -54,12 +55,11 @@ void exe_bytecode(char **bytecode, int num_instructions)
 		if (!found)
 		{
 			/* if no match is found print error */
-			fprintf(stderr, "Error: Unknown instruction %s at line
-					%u\n", trimmed_opcode, line_number);
+			fprintf(stderr, "Error: Unknown instruction %s at line %u\n", trimmed_opcode, read_op.line_number);
 			exit(EXIT_FAILURE);
 		}
 
-		line_number++;
+		read_op.line_number++;
 	}
 
 	free(stack);

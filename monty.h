@@ -1,5 +1,6 @@
-#ifndef MONTY_FILE_H
-#define MONTY_FILE_H
+#ifndef MONTY_H
+#define MONTY_H
+#define _GNU_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,15 +58,22 @@ typedef struct instruction_s
 typedef struct global_vars
 {
 	FILE *file;
-	char *line = NULL;
-	size_t line_size = 0;
+	char *line;
+	size_t line_size;
 	ssize_t read;
-	int line_number = 1;
+	int line_number;
+	int num_instructions;
+	instruction_t *instruction;
 } global_t;
 
 extern global_t read_op;
 
 void exe_bytecode(char **bytecode, int num_instructions);
 instruction_t *get_opcodes(void);
-
-#endif
+void swap(stack_t **stack, unsigned int line_number);
+void add(stack_t **stack, unsigned int line_number);
+void push(stack_t **stack, unsigned int line_number);
+void pall(stack_t **stack, unsigned int line_number);
+void pop(stack_t **stack, unsigned int line_number);
+void pint(stack_t **stack, unsigned int line_number);
+#endif /*MONTY_H*/
