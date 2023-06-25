@@ -2,66 +2,52 @@
 
 /**
  * exe_bytecode - reads and processes bytecode instructions from a file
- * @bytecode: array of strings representing the bytecode instructions
- * @num_instructions: Number of instructions in the array
+ * @line: pointer to the line read from bytecode file
+ * @line_number: The number from which the line was read
+ * @stack: stack on which the operation must be done
  */
 
-void exe_bytecode(char **bytecode, int num_instructions)
+void exe_bytecode(const char *line, int line_number, stack_t **stack)
 {
 
+	int i;
 	char *opcode;
-	char *trimmed_opcode;
-	int found = 0;
-	int i, j;
+	char *line_copy;
+	instruction_t *opcodes;
 
-	stack_t *stack = malloc(sizeof(stack_t));
-
-	if (stack == NULL)
+	line_copy = strdup(line);
+	opcode = strtok(line_copy, " \t\r\n");
+	if (opcode == NULL)
 	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
+		return;
 	}
 
-	for (i = 0; i < num_instructions; i++)
+	/* remove non opcode/int argument if present */
+	if (opcode[strlen(opcode) - 1] == '$')
 	{
-		read_op.line = bytecode[i];
-
-		opcode = strtok(read_op.line, " \t");
-		if (opcode == NULL)
-		{
-			/* ignore empty lines */
-			continue;
-		}
-
-		/* Remove leading spaces from the opcode */
-		trimmed_opcode = opcode;
-		while (*trimmed_opcode == ' ')
-		{
-			trimmed_opcode++;
-		}
-
-		/* search for the opcode in the instructions array */
-		for (j = 0; read_op.instruction[j].opcode != NULL; j++)
-		{
-			if (strcmp(trimmed_opcode, read_op.instruction[i].opcode) == 0)
-			{
-			/* call the corresponding opcode handler */
-			read_op.instruction[j].f(&stack, read_op.line_number);
-				found = 1;
-				break;
-			}
-		}
-
-		if (!found)
-		{
-			/* if no match is found print error */
-			fprintf(stderr, "Error: Unknown instruction %s at line %u\n",
-					trimmed_opcode, read_op.line_number);
-			exit(EXIT_FAILURE);
-		}
-
-		read_op.line_number++;
+		opcode[strlen(opcode) - 1] = '\0';
 	}
 
-	free(stack);
+	/* extract the argument if present */
+	read_op.push_argument = strtok(NULL, " \t\r\n");
+
+	/*Process the opcode*/
+	opcodes = get_opcodes();
+
+	/* search for the opcode in the instructions array */
+	for (i = 0; opcodes[i].opcode != NULL; i++)
+	{
+		if (strcmp(opcode, opcodes[i].opcode) == 0)
+		{
+		/* call the corresponding opcode handler */
+			opcodes[i].f(stack, line_number);
+			free(line_copy);
+			return;
+		}
+	}
+	/* if no match is found print error */
+	fprintf(stderr, "Error: Unknown instruction %s at line %u\n",
+			opcode, line_number);
+	free(line_copy);
+	exit(EXIT_FAILURE);
 }

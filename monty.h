@@ -1,10 +1,12 @@
 #ifndef MONTY_H
 #define MONTY_H
 #define _GNU_SOURCE
+#define MAX_BYTECODE_SIZE 1000
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -53,6 +55,8 @@ typedef struct instruction_s
  * @ line_size: the size of the arguments
  * @ read: the variable that will hold the read code
  * @ line_number: the line number where the command is input
+ * @ instruction: Array of opcode string and opcode handler
+ * @ push_argument: contains the argument for push operation
  */
 
 typedef struct global_vars
@@ -62,14 +66,18 @@ typedef struct global_vars
 	size_t line_size;
 	ssize_t read;
 	int line_number;
-	int num_instructions;
 	instruction_t *instruction;
+	char *push_argument;
 } global_t;
 
 extern global_t read_op;
 
-void exe_bytecode(char **bytecode, int num_instructions);
+void exe_bytecode(const char *line, int line_number, stack_t **stack);
+bool process_bytecode_file(const char *filename, stack_t **stack);
+bool is_int(const char *str);
+bool is_whitespace(const char *str);
 instruction_t *get_opcodes(void);
+void free_stack(stack_t *stack);
 void swap(stack_t **stack, unsigned int line_number);
 void add(stack_t **stack, unsigned int line_number);
 void push(stack_t **stack, unsigned int line_number);
