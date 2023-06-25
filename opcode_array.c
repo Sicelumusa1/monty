@@ -15,6 +15,9 @@ instruction_t *get_opcodes(void)
 		{"swap", swap},
 		{"add", add},
 		{"nop", nop},
+		{"sub", sub},
+		{"mul", mul},
+		{"mod", mod},
 		{NULL, NULL}
 	};
 
