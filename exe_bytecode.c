@@ -22,12 +22,6 @@ void exe_bytecode(const char *line, int line_number, stack_t **stack)
 		return;
 	}
 
-	/* remove non opcode/int argument if present */
-	if (opcode[strlen(opcode) - 1] == '$')
-	{
-		opcode[strlen(opcode) - 1] = '\0';
-	}
-
 	/* extract the argument if present */
 	read_op.push_argument = strtok(NULL, " \t\r\n");
 
