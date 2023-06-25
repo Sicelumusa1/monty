@@ -9,14 +9,16 @@
 void pall(stack_t **stack, unsigned int line_number)
 {
 	stack_t *curr = *stack;
-	(void) line_number;
 
-	if (curr == NULL)
-		return;
+	if (*stack == NULL)
+	{
+		fprintf(stderr, "L%d: can't pall, stack empty", line_number);
+		exit(EXIT_FAILURE);
+	}
 
-	/*traverse the list untill NULL*/
-	do {
+	while (curr != NULL)
+	{
 		printf("%d\n", curr->n);
 		curr = curr->next;
-	} while (curr != NULL);
+	}
 }

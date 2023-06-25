@@ -10,17 +10,24 @@ void push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new_node;
 	int value;
-	char *arg = strtok(NULL, " \r\t\n");
+	char *argument = read_op.push_argument;
 
-	if (arg == NULL || *arg == '\0')
+	if (argument == NULL)
 	{
 		fprintf(stderr, "L%d: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
-	value = atoi(arg);
+	if (!is_int(argument))
+	{
+		fprintf(stderr, "L%d: usage: push integer\n", line_number);
+		exit(EXIT_FAILURE);
+	}
+
+	value = atoi(argument);
 
 	new_node = malloc(sizeof(stack_t));
+
 	if (new_node == NULL)
 	{
 		fprintf(stderr, "Memory allocation failed\n");
